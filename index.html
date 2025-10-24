@@ -1,1 +1,522 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LNX Robotics — AI Automation & Robotics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --primary:#00d4ff;
+      --accent:#00ffa1;
+      --bg:#020817;
+      --card:#0b1224;
+      --text:#eaf4ff;
+      --muted:#97a7c0;
+      --danger:#ff5470;
+      --gold:#ffd166;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      background:radial-gradient(1200px 600px at 80% -10%, rgba(0,212,255,.15), transparent 60%),
+                 radial-gradient(900px 500px at -10% 20%, rgba(0,255,161,.12), transparent 60%),
+                 var(--bg);
+      color:var(--text);
+      font-family:"Inter",system-ui,Segoe UI,Roboto,Arial,sans-serif;
+      overflow-x:hidden;
+    }
+    a{color:inherit;text-decoration:none}
 
+    /* Header */
+    header{
+      position:sticky;top:0;z-index:1000;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:18px 6vw;
+      background:rgba(2,8,23,.55);
+      backdrop-filter: blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .brand{
+      display:flex;align-items:center;gap:14px;
+      user-select:none;
+    }
+    .brand-badge{
+      width:42px;height:42px;border-radius:10px;
+      background:conic-gradient(from 90deg,var(--primary),var(--accent),var(--primary));
+      box-shadow:0 0 22px rgba(0,212,255,.45);
+      position:relative;isolation:isolate;
+    }
+    .brand-badge::after{
+      content:"";position:absolute;inset:3px;border-radius:8px;background:#001522;
+    }
+    .brand-name{
+      font-weight:900;letter-spacing:.5px;font-size:1.4rem;line-height:1;
+    }
+    .brand-name strong{
+      font-size:1.2em;
+      background:linear-gradient(90deg,var(--primary),var(--accent));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      text-shadow: 0 0 18px rgba(0,212,255,.35);
+    }
+    nav ul{display:flex;gap:16px;list-style:none}
+    .btn{
+      appearance:none;border:none;cursor:pointer;
+      padding:12px 20px;border-radius:12px;font-weight:800;
+      transition:transform .25s ease, box-shadow .25s ease, opacity .2s;
+      will-change:transform;
+    }
+    .btn:hover{transform:translateY(-2px) scale(1.02)}
+    .btn:active{transform:translateY(0) scale(.99)}
+    .btn-primary{
+      color:#00131a;background:linear-gradient(90deg,var(--primary),var(--accent));
+      box-shadow:0 0 24px rgba(0,212,255,.35);
+    }
+    .btn-ghost{
+      color:var(--text);background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08)
+    }
+
+    /* HERO */
+    .hero{
+      position:relative;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;
+      align-items:center;padding:90px 6vw 40px;
+    }
+    @media(max-width:980px){.hero{grid-template-columns:1fr;gap:28px;padding-top:56px}}
+    .hero-eyebrow{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:8px 14px;border-radius:999px;
+      background:rgba(0,212,255,.09);color:var(--primary);font-weight:700;font-size:.9rem
+    }
+    .spark{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 16px var(--accent)}
+    .title{
+      margin-top:16px;line-height:1.08;font-weight:900;font-size:clamp(42px,6.8vw,86px);
+      letter-spacing:-.5px;
+      background:linear-gradient(90deg,var(--primary) 0%,#b3fbff 25%,var(--accent) 55%,#b7ffd9 80%,var(--primary) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      filter:drop-shadow(0 0 18px rgba(0,212,255,.25));
+      position:relative;
+    }
+    .title .stroke{
+      position:absolute;inset:0;color:transparent;
+      -webkit-text-stroke: 12px rgba(0,212,255,.05); /* halo outline */
+      z-index:-1;filter:blur(8px)
+    }
+    .subtitle{margin-top:14px;max-width:640px;color:var(--muted);font-size:1.1rem;line-height:1.7}
+    .cta{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+
+    /* hero visual with hover-parallax/tilt */
+    .visual{
+      position:relative;isolation:isolate;
+      display:flex;align-items:center;justify-content:center;
+      perspective:1000px;
+    }
+    .tilt{
+      width:min(520px,90vw);aspect-ratio:4/3;border-radius:22px;overflow:hidden;position:relative;
+      transform-style:preserve-3d;transition:transform .15s ease;
+      box-shadow:
+        0 30px 60px rgba(0,0,0,.45),
+        0 0 40px rgba(0,212,255,.18);
+      background:linear-gradient(180deg,#041225,#030b18);
+      border:1px solid rgba(255,255,255,.08)
+    }
+    .tilt img{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.95;
+      filter:contrast(1.05) saturate(1.05) brightness(1.05);
+      transform:translateZ(40px) scale(1.02);
+    }
+    .tilt .overlay{
+      position:absolute;inset:auto 0 0 0;height:45%;
+      background:linear-gradient(180deg,transparent,rgba(0,0,0,.35));
+      transform:translateZ(60px);
+    }
+    .glow-orb{
+      position:absolute;width:160px;height:160px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%, #fff, var(--primary) 40%, transparent 60%);
+      filter:blur(18px);mix-blend-mode:screen;opacity:.35;pointer-events:none;
+      animation:float 6s ease-in-out infinite;
+    }
+    .glow-orb.o2{left:auto;right:-30px;top:10%;animation-delay:.8s}
+    .glow-orb.o3{left:20%;bottom:-30px;animation-delay:1.4s}
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-18px)}
+    }
+
+    /* Cofounder logo Hyperone (moving/breathing marquee) */
+    .cofounder{
+      padding:50px 6vw 20px;
+    }
+    .cf-head{
+      display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+    .cf-head h2{font-size:1.4rem;font-weight:800;color:var(--accent)}
+    .cf-badge{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);color:#b6c5ff;font-weight:700
+    }
+    .marquee{
+      position:relative;overflow:hidden;border-radius:16px;
+      border:1px solid rgba(255,255,255,.06);
+      background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.04));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    .marquee-track{
+      display:flex;gap:30px;align-items:center;
+      width:max-content;padding:20px 24px;
+      animation:scroll 18s linear infinite;
+    }
+    @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+    .hyperone{
+      font-size:clamp(36px,6vw,72px);font-weight:900;letter-spacing:1px;
+      padding:10px 20px;border-radius:16px;white-space:nowrap;
+      background:linear-gradient(90deg,#fff,var(--gold),#fff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+      text-shadow:0 0 20px rgba(255,209,102,.35);
+      animation:breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe{
+      0%,100%{filter:drop-shadow(0 0 10px rgba(255,209,102,.3))}
+      50%{filter:drop-shadow(0 0 22px rgba(255,209,102,.55))}
+    }
+
+    /* Solutions cards */
+    .section{padding:70px 6vw}
+    .section h2{
+      font-size:clamp(28px,3.4vw,44px);font-weight:900;margin-bottom:10px;
+      background:linear-gradient(90deg,var(--primary),#b3fbff);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    }
+    .section p.lead{color:var(--muted);max-width:780px;line-height:1.7;margin-bottom:26px}
+    .grid{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px
+    }
+    @media(max-width:1050px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;position:relative;
+      transition:transform .25s ease, box-shadow .25s ease,border-color .25s ease;
+    }
+    .card:hover{transform:translateY(-6px);box-shadow:0 30px 60px rgba(0,0,0,.35), 0 0 26px rgba(0,212,255,.18);border-color:rgba(0,212,255,.35)}
+    .card .thumb{aspect-ratio:4/3;overflow:hidden}
+    .card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;filter:brightness(1.06)}
+    .card:hover .thumb img{transform:scale(1.08)}
+    .card .body{padding:18px}
+    .card h3{font-size:1.2rem;margin-bottom:6px}
+    .card p{color:var(--muted);font-size:.98rem;line-height:1.6}
+
+    /* Explore strip */
+    .explore{
+      margin-top:26px;display:flex;align-items:center;gap:12px;flex-wrap:wrap
+    }
+    .chip{
+      font-weight:700;color:#00131a;background:linear-gradient(90deg,var(--primary),var(--accent));
+      padding:9px 14px;border-radius:999px;box-shadow:0 0 20px rgba(0,212,255,.35)
+    }
+    .note{color:var(--muted)}
+    .explore a.btn-primary{font-size:1rem}
+
+    /* Earth (AI globalization) */
+    .earth{
+      position:relative;margin-top:40px;border-radius:24px;overflow:hidden;
+      background:radial-gradient(800px 300px at 50% 0,rgba(0,212,255,.15),transparent 60%), #000814;
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .earth .wrap{
+      display:grid;grid-template-columns:1.2fr 1fr;gap:26px;align-items:center;padding:50px 32px;
+    }
+    @media(max-width:980px){.earth .wrap{grid-template-columns:1fr}}
+    .globe{
+      width:min(560px,90vw);aspect-ratio:1;border-radius:50%;
+      margin-inline:auto;position:relative;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(0,255,161,.25), transparent 45%),
+        radial-gradient(circle at 70% 70%, rgba(0,212,255,.28), transparent 50%),
+        radial-gradient(circle at 50% 50%, #061a2a, #03111f 60%);
+      box-shadow: inset 0 -40px 120px rgba(0,0,0,.55), 0 0 120px rgba(0,212,255,.18);
+      overflow:hidden;
+    }
+    .latlon,.latlon:before,.latlon:after{
+      position:absolute;inset:-40%;border-radius:50%;border:1px dashed rgba(255,255,255,.08);
+      animation:spin 26s linear infinite;
+    }
+    .latlon:before{content:"";inset:-34%;animation-duration:20s}
+    .latlon:after{content:"";inset:-28%;animation-duration:14s}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .link-dot{
+      position:absolute;width:10px;height:10px;border-radius:50%;background:var(--accent);
+      box-shadow:0 0 14px var(--accent), 0 0 34px rgba(0,255,161,.6);
+      animation:pulse 1.8s ease-in-out infinite;
+    }
+    .link-dot.d1{top:18%;left:52%}
+    .link-dot.d2{top:58%;left:36%}
+    .link-dot.d3{top:42%;left:72%}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+    .beams{
+      position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.8;
+      background:
+        radial-gradient(600px 30px at 52% 18%, rgba(0,255,161,.45), transparent 70%),
+        radial-gradient(700px 30px at 36% 58%, rgba(0,212,255,.45), transparent 70%),
+        radial-gradient(700px 30px at 72% 42%, rgba(0,212,255,.45), transparent 70%);
+      filter:blur(2px);
+    }
+    .earth h3{
+      font-size:clamp(24px,3vw,34px);font-weight:900;margin-bottom:10px
+    }
+    .earth p{color:var(--muted);line-height:1.7;margin-bottom:16px}
+    .earth ul{display:grid;gap:10px;color:#b7c6ff}
+    .earth ul li{list-style:"✦ ";margin-left:18px}
+
+    /* Contact & footer */
+    .contact{
+      padding:60px 6vw 80px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px
+    }
+    @media(max-width:900px){.contact{grid-template-columns:1fr}}
+    .panel{
+      background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;padding:22px
+    }
+    .panel h4{color:var(--primary);font-size:1.1rem;margin-bottom:8px}
+    .panel p{color:var(--muted);line-height:1.7}
+    footer{
+      text-align:center;padding:24px 6vw 40px;color:#7b8699;
+      border-top:1px solid rgba(255,255,255,.06)
+    }
+
+    /* micro-interactions */
+    .blink{animation:blink 1.6s steps(2,end) infinite}
+    @keyframes blink{50%{opacity:.3}}
+
+    /* Smooth page fade */
+    body{transition:opacity .35s ease}
+    .fade-out{opacity:0}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-badge"></div>
+      <div class="brand-name"><strong>LNX Robotics</strong><div style="font-size:.78rem;font-weight:700;color:#8fb3ff;opacity:.9">AI Automation & Robotics</div></div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#solutions" class="btn btn-ghost">Giải pháp</a></li>
+        <li><a href="#global" class="btn btn-ghost">Global AI</a></li>
+        <li><a href="#contact" class="btn btn-primary">Liên hệ</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <span class="hero-eyebrow"><span class="spark"></span> AI • Automation • Robotics</span>
+      <h1 class="title">
+        <span class="stroke">LNX Robotics</span>
+        LNX Robotics<br/>Công nghệ AI đột phá
+      </h1>
+      <p class="subtitle">
+        LNX Robotics kết hợp trí tuệ nhân tạo và robot để tự động hóa quy trình, tối ưu hiệu suất vận hành
+        và tăng trưởng bền vững cho doanh nghiệp Việt Nam.
+      </p>
+      <div class="cta">
+        <!-- Nút tích hợp sang kptp.html -->
+        <a href="kptp.html" class="btn btn-primary">Khám phá giải pháp</a>
+        <a href="#solutions" class="btn btn-ghost">Tại sao chọn LNX?</a>
+      </div>
+      <div class="explore">
+        <span class="chip">Triển khai nhanh 2–6 tuần</span>
+        <span class="chip">Bảo mật cấp doanh nghiệp</span>
+        <span class="note">*Cam kết KPI theo quý, đội ngũ tư vấn tận nơi.</span>
+      </div>
+    </div>
+
+    <div class="visual">
+      <div class="tilt" id="tilt">
+        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1600&q=80" alt="AI Robotics Illustration">
+        <div class="overlay"></div>
+      </div>
+      <div class="glow-orb o1" style="left:-30px;top:-30px"></div>
+      <div class="glow-orb o2"></div>
+      <div class="glow-orb o3"></div>
+    </div>
+  </section>
+
+  <!-- COFOUNDER LOGO: HYPERONE -->
+  <section class="cofounder" aria-label="Đồng sáng lập">
+    <div class="cf-head">
+      <h2>Đồng sáng lập & Đối tác chiến lược</h2>
+      <span class="cf-badge">Logo Hyperone <span class="blink">●</span> chuyển động</span>
+    </div>
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <div class="hyperone">HYPERONE ✦ CO-FOUNDER</div>
+        <div class="hyperone">HYPERONE ✦ CO-FOUNDER</div>
+        <div class="hyperone">HYPERONE ✦ CO-FOUNDER</div>
+        <div class="hyperone">HYPERONE ✦ CO-FOUNDER</div>
+        <!-- lặp lại tự nhiên nhờ animation -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTIONS -->
+  <section class="section" id="solutions">
+    <h2>Giải pháp tự động hóa với Agentic AI</h2>
+    <p class="lead">Chúng tôi thiết kế hệ tác tử (Agentic AI) và workflow automation kết nối hệ thống hiện hữu, giúp đội ngũ của bạn đạt hiệu suất 10× với chi phí tối ưu.</p>
+
+    <div class="grid">
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1600&auto=format&fit=crop" alt="Seamless Integration">
+        </div>
+        <div class="body">
+          <h3>Seamless Integration</h3>
+          <p>Tích hợp API/ERP/CRM mượt mà, không làm gián đoạn vận hành. Giảm 60–80% thao tác lặp.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1555255707-c07966088b7b?q=80&w=1600&auto=format&fit=crop" alt="Real-time Optimization">
+        </div>
+        <div class="body">
+          <h3>Real-time Optimization</h3>
+          <p>Thu thập & tối ưu theo thời gian thực: từ dự báo nhu cầu đến phân bổ nguồn lực bằng AI.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1600&auto=format&fit=crop" alt="Customizable Solutions">
+        </div>
+        <div class="body">
+          <h3>Customizable Solutions</h3>
+          <p>Tùy biến theo ngành: tài chính, bán lẻ, sản xuất… KPI gắn liền giá trị mang lại.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop" alt="Scalable Architecture">
+        </div>
+        <div class="body">
+          <h3>Scalable Architecture</h3>
+          <p>Kiến trúc mở, mở rộng tuyến tính khi nhu cầu tăng. Giảm chi phí dài hạn.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" alt="Enhanced Security">
+        </div>
+        <div class="body">
+          <h3>Enhanced Security</h3>
+          <p>Bảo mật cấp doanh nghiệp, data residency & kiểm soát quyền truy cập chi tiết.</p>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb">
+          <img src="https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1600&auto=format&fit=crop" alt="User-Friendly Interface">
+        </div>
+        <div class="body">
+          <h3>User-Friendly Interface</h3>
+          <p>Giao diện thân thiện, onboard nhanh; dashboard trực quan theo vai trò.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="explore">
+      <a href="kptp.html" class="btn btn-primary">Khám phá giải pháp</a>
+      <span class="note">Khi vào, bạn sẽ thấy: <strong>Cam kết KPI</strong> • <strong>Triển khai nhanh</strong> • <strong>Tối ưu chi phí</strong> • <strong>Hỗ trợ 24/7</strong></span>
+    </div>
+  </section>
+
+  <!-- EARTH / GLOBALIZATION BY AI -->
+  <section class="section earth" id="global" aria-label="Globalization by AI">
+    <div class="wrap">
+      <div>
+        <div class="globe">
+          <div class="latlon"></div>
+          <span class="link-dot d1"></span>
+          <span class="link-dot d2"></span>
+          <span class="link-dot d3"></span>
+          <div class="beams"></div>
+        </div>
+      </div>
+      <div>
+        <h3>Kết nối toàn cầu hóa bằng AI</h3>
+        <p>Chúng tôi xây dựng mạng lưới tích hợp dữ liệu an toàn, chuẩn hóa và thông minh giữa các chi nhánh, nhà cung cấp và khách hàng — để quyết định được đưa ra bằng dữ liệu thời gian thực.</p>
+        <ul>
+          <li>Data Mesh & Event Streaming đa khu vực.</li>
+          <li>Agentic AI điều phối quy trình end-to-end.</li>
+          <li>Tuân thủ bảo mật & quản trị dữ liệu theo tiêu chuẩn quốc tế.</li>
+        </ul>
+        <div class="cta" style="margin-top:14px">
+          <a href="kptp.html" class="btn btn-primary">Bắt đầu cùng LNX</a>
+          <a href="#contact" class="btn btn-ghost">Liên hệ tư vấn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="panel">
+      <h4>Văn phòng</h4>
+      <p>Hồ Chí Minh — Quận 1</p>
+    </div>
+    <div class="panel">
+      <h4>Liên hệ nhanh</h4>
+      <p>Email: <strong>LNXRobotics@gmail.com</strong><br/>SĐT: <strong>0704107623</strong></p>
+    </div>
+    <div class="panel">
+      <h4>Giờ làm việc</h4>
+      <p>Thứ 2 – Thứ 6: 9:00 – 17:00</p>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 <strong>LNX Robotics</strong> — Thiết kế & phát triển bởi LNX Robotics. Tất cả các quyền được bảo lưu.
+  </footer>
+
+  <script>
+    // Smooth scroll for # links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click',e=>{
+        const el=document.querySelector(a.getAttribute('href'));
+        if(el){e.preventDefault();el.scrollIntoView({behavior:'smooth',block:'start'})}
+      })
+    });
+
+    // Subtle page fade when navigating to kptp.html
+    document.querySelectorAll('a[href$="kptp.html"]').forEach(link=>{
+      link.addEventListener('click',e=>{
+        // nếu là cùng host & file tồn tại, cho hiệu ứng fade-out
+        document.body.classList.add('fade-out');
+      });
+    });
+
+    // Hero tilt parallax
+    (function(){
+      const box=document.getElementById('tilt');
+      if(!box) return;
+      const damp=35;
+      const reset=()=>box.style.transform=`rotateX(0deg) rotateY(0deg)`;
+      box.addEventListener('mousemove',e=>{
+        const r=box.getBoundingClientRect();
+        const px=(e.clientX - r.left)/r.width - .5;
+        const py=(e.clientY - r.top)/r.height - .5;
+        box.style.transform=`rotateX(${(-py)*damp}deg) rotateY(${px*damp}deg)`;
+      });
+      box.addEventListener('mouseleave',()=>{box.style.transition='transform .3s ease'; reset(); setTimeout(()=>box.style.transition='',300)});
+    })();
+  </script>
+</body>
+</html>
